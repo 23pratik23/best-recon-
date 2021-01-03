@@ -24,14 +24,14 @@ shuffledns -d $domain -list $domain/sources/all.txt  -r $resolvers -o $domain/do
 resolving_domain
 
 http_prob(){
-httpx -l $domain/domains.txt -title -content-length -status-code  -o $domain/Recon/httx.txt
+httpx -l $domain/domains.txt -title -content-length -status-code  -o $domain/Recon/httpx.txt
 }
 http_prob
 
-scanner(){
-cat  $domain/Recon/httx.txt | nuclei -t /root/nuclei-templates/ -c 50 -o  $domain/Recon/nuclei/ nuclei_domain.txt 
+nuclei(){
+cat  $domain/Recon/httpx.txt | nuclei -t /root/nuclei-templates/ -c 50 -o  $domain/Recon/nuclei/nuclei_domain.txt 
 }
-scanner
+nuclei
 
 wayback_data(){
 cat $domain/domains.txt | waybackurls | tee $domain/Recon/wayback/way.txt
@@ -41,13 +41,13 @@ rm $domain/Recon/wayback/way.txt
 } 
 wayback_data
 
-valid_urls(){
+ffuf(){
 
 ffuf -c -u "FFUF" -w $domain/Recon/wayback/wayback.txt -of csv -o $domain/Recon/wayback/valid-tmp.txt
 cat $domain/Recon/wayback/valid-tmp.txt | grep http | awk -F "," '{print $1}' >>$domain/Recon/wayback/valid.txt
 rm $domain/Recon/wayback/valid-tmp.txt
 }
-valid_urls
+ffuf
 
 gf_patterns(){
 gf xss $domain/Recon/wayback/valid.txt | tee $domain/Recon/gf/xss.txt
