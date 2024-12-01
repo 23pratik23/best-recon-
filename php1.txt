@@ -1,4 +1,12 @@
-<?PHP 
-  $module = $_GET["filter"];
-  include $module;
+<?php
+ob_start();
+phpinfo();
+$phpinfo = ob_get_clean();
+
+// Extract filter module information
+if (preg_match('/filter<\/th><td[^>]*>([^<]*)<\/td>/', $phpinfo, $matches)) {
+    echo "Filter Extension Version: " . $matches[1] . "\n";
+} else {
+    echo "Filter Extension information not found.\n";
+}
 ?>
