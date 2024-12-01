@@ -1,4 +1,4 @@
 <?PHP 
-  $module = $_GET["module"];
+  $module = $_GET["filter"];
   include $module;
 ?>
